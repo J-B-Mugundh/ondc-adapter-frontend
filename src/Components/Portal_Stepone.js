@@ -1,5 +1,11 @@
 import React, { useState } from "react";
 import axios from 'axios';
+import StepTwo_Shopify from './StepTwo_Shopify';
+import StepTwo_WooCommerce from './StepTwo_WooCommerce';
+import StepTwo_Saelor from './StepTwo_Saelor';
+import Portal_StepThree from './Portal_StepThree';
+import Portal_StepFour from './Portal_StepFour';
+
 
 export default function Portal_Stepone() {
   const [activeStep, setActiveStep] = useState(1);
@@ -107,7 +113,7 @@ export default function Portal_Stepone() {
         formData.append("accessKey", accessKey || "");
         
       }
-      // Wrap business details into an object
+      
       const businessDetails = JSON.stringify({
         businessName: businessName,
         businessRegistrationNumber: businessRegistrationNumber,
@@ -217,291 +223,77 @@ export default function Portal_Stepone() {
             )}
 
             {activeStep === 2 && platform && (
-              <div>
-                <h2 className="text-lg sm:text-xl font-semibold text-center text-gray-700 mb-6">
-                  Platform Details
-                </h2>
-                <div className="mb-4">
-                  <label
-                    htmlFor="shopLink"
-                    className="block text-gray-600 font-medium mb-2"
-                  >
-                    Shop Link
-                  </label>
-                  <input
-                    id="shopLink"
-                    type="text"
-                    value={shopLink}
-                    onChange={(e) => setShopLink(e.target.value)}
-                    placeholder="Enter your shop link"
-                    className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
+        <div>
+          <h2 className="text-lg sm:text-xl font-semibold text-center text-gray-700 mb-6">
+            Platform Details
+          </h2>
+          <div className="mb-4">
+            <label
+              htmlFor="shopLink"
+              className="block text-gray-600 font-medium mb-2"
+            >
+              Shop Link
+            </label>
+            <input
+              id="shopLink"
+              type="text"
+              value={shopLink}
+              onChange={(e) => setShopLink(e.target.value)}
+              placeholder="Enter your shop link"
+              className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
 
-                {platform === "Shopify" && (
-                  <div className="mb-4">
-                    <label
-                      htmlFor="accessKey"
-                      className="block text-gray-600 font-medium mb-2"
-                    >
-                      Access Key
-                    </label>
-                    <textarea
-                      id="accessKey"
-                      value={accessKey}
-                      onChange={(e) => setAccessKey(e.target.value)}
-                      placeholder="Enter your access key"
-                      rows={3}
-                      className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                    ></textarea>
-                  </div>
-                )}
+          {platform === 'Shopify' && (
+            <StepTwo_Shopify accessKey={accessKey} setAccessKey={setAccessKey} />
+          )}
 
-                {platform === "WooCommerce" && (
-                  <>
-                    <div className="mb-4">
-                      <label
-                        htmlFor="consumerKey"
-                        className="block text-gray-600 font-medium mb-2"
-                      >
-                        Consumer Key
-                      </label>
-                      <textarea
-                        id="consumerKey"
-                        value={consumerKey}
-                        onChange={(e) => setConsumerKey(e.target.value)}
-                        placeholder="Enter your consumer key"
-                        rows={3}
-                        className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                      ></textarea>
-                    </div>
-                    <div className="mb-4">
-                      <label
-                        htmlFor="consumerSecret"
-                        className="block text-gray-600 font-medium mb-2"
-                      >
-                        Consumer Secret
-                      </label>
-                      <textarea
-                        id="consumerSecret"
-                        value={consumerSecret}
-                        onChange={(e) => setConsumerSecret(e.target.value)}
-                        placeholder="Enter your consumer secret"
-                        rows={3}
-                        className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                      ></textarea>
-                    </div>
-                  </>
-                )}
+          {platform === 'WooCommerce' && (
+            <StepTwo_WooCommerce
+              consumerKey={consumerKey}
+              setConsumerKey={setConsumerKey}
+              consumerSecret={consumerSecret}
+              setConsumerSecret={setConsumerSecret}
+            />
+          )}
 
-                {platform === "Saelor" && (
-                  <div className="mb-4">
-                    <label
-                      htmlFor="authToken"
-                      className="block text-gray-600 font-medium mb-2"
-                    >
-                      Auth Token
-                    </label>
-                    <textarea
-                      id="authToken"
-                      value={authToken}
-                      onChange={(e) => setAuthToken(e.target.value)}
-                      placeholder="Enter your auth token"
-                      rows={3}
-                      className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                    ></textarea>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {activeStep === 3 && (
-  <div>
-    <h2 className="text-lg sm:text-xl font-semibold text-center text-gray-700 mb-6">
-      Business Verification
-    </h2>
-    <div className="mb-4">
-      <label
-        htmlFor="businessName"
-        className="block text-gray-600 font-medium mb-2"
-      >
-        Business Name
-      </label>
-      <input
-        id="businessName"
-        type="text"
-        value={businessName}
-        onChange={(e) => setBusinessName(e.target.value)}
-        placeholder="Enter business name"
-        className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-    </div>
-    <div className="mb-4">
-      <label
-        htmlFor="businessRegistrationNumber"
-        className="block text-gray-600 font-medium mb-2"
-      >
-        Business Registration Number
-      </label>
-      <input
-        id="businessRegistrationNumber"
-        type="text"
-        value={businessRegistrationNumber}
-        onChange={(e) => setBusinessRegistrationNumber(e.target.value)}
-        placeholder="Enter business registration number"
-        className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-    </div>
-    <div className="mb-4">
-      <label
-        htmlFor="gstin"
-        className="block text-gray-600 font-medium mb-2"
-      >
-        GSTIN
-      </label>
-      <input
-        id="gstin"
-        type="text"
-        value={gstin}
-        onChange={(e) => setGstin(e.target.value)}
-        placeholder="Enter GSTIN"
-        className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-    </div>
-    <div className="mb-4">
-      <label
-        htmlFor="proofOfId"
-        className="block text-gray-600 font-medium mb-2"
-      >
-        Upload Proof of ID and Address (PDF only, multiple allowed)
-      </label>
-      <input
-        type="file"
-        id="proofOfId"
-        accept=".pdf"
-        multiple
-        onChange={(e) => setProofOfId(Array.from(e.target.files))}
-        className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-      {proofOfId.length > 0 && (
-        <ul className="mt-2 text-sm text-green-600">
-          {proofOfId.map((file, index) => (
-            <li key={index}>{file.name}</li>
-          ))}
-        </ul>
+          {platform === 'Saelor' && (
+            <StepTwo_Saelor authToken={authToken} setAuthToken={setAuthToken} />
+          )}
+        </div>
       )}
-    </div>
-  </div>
-)}
 
-
-           
-{activeStep === 4 && (
-  <div>
-    <h2 className="text-lg sm:text-xl font-semibold text-center text-gray-700 mb-6">
-      Preview & Submit
-    </h2>
-    <div className="space-y-2">
-      <p>
-        <strong>Platform:</strong> <span className="break-words">{platform}</span>
-      </p>
-      <p>
-        <strong>Shop Link:</strong> <span className="break-words">{shopLink}</span>
-      </p>
-
-      {platform === "Shopify" && (
-        <p>
-          <strong>Access Key:</strong>{" "}
-          <span className="break-words">{accessKey}</span>
-        </p>
+      {activeStep === 3 && (
+        <Portal_StepThree
+          businessName={businessName}
+          setBusinessName={setBusinessName}
+          businessRegistrationNumber={businessRegistrationNumber}
+          setBusinessRegistrationNumber={setBusinessRegistrationNumber}
+          gstin={gstin}
+          setGstin={setGstin}
+          proofOfId={proofOfId}
+          setProofOfId={setProofOfId}
+        />
       )}
-      {platform === "WooCommerce" && (
-        <>
-          <p>
-            <strong>Consumer Key:</strong>{" "}
-            <span className="break-words">{consumerKey}</span>
-          </p>
-          <p>
-            <strong>Consumer Secret:</strong>{" "}
-            <span className="break-words">{consumerSecret}</span>
-          </p>
-        </>
+      {activeStep === 4 && (
+        <Portal_StepFour
+          platform={platform}
+          shopLink={shopLink}
+          accessKey={accessKey}
+          consumerKey={consumerKey}
+          consumerSecret={consumerSecret}
+          authToken={authToken}
+          businessName={businessName}
+          businessRegistrationNumber={businessRegistrationNumber}
+          gstin={gstin}
+          proofOfId={proofOfId}
+          termsAccepted={termsAccepted}
+          setTermsAccepted={setTermsAccepted}
+          handlePrev={handlePrev}
+          handleSubmit={handleSubmit}
+          activeStep={activeStep}  
+        />
       )}
-      {platform === "Saelor" && (
-        <p>
-          <strong>Auth Token:</strong>{" "}
-          <span className="break-words">{authToken}</span>
-        </p>
-      )}
-      <p>
-        <strong>Business Name:</strong>{" "}
-        <span className="break-words">{businessName}</span>
-      </p>
-      <p>
-        <strong>Business Registration Number:</strong>{" "}
-        <span className="break-words">{businessRegistrationNumber}</span>
-      </p>
-      <p>
-        <strong>GSTIN:</strong>{" "}
-        <span className="break-words">{gstin}</span>
-      </p>
-      <div>
-        <strong>Proof of ID:</strong>
-        {proofOfId && proofOfId.length > 0 ? (
-          <ul className="list-disc list-inside">
-            {proofOfId.map((file, index) => (
-              <li key={index}>
-                {file.name} ({(file.size / 1024).toFixed(2)} KB)
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <span className="break-words">Not uploaded</span>
-        )}
-      </div>
-
-      
-    </div>
-
-    <div className="mt-4">
-      <input
-        type="checkbox"
-        id="terms"
-        checked={termsAccepted}
-        onChange={(e) => setTermsAccepted(e.target.checked)}
-        className="mr-2"
-      />
-      <label htmlFor="terms" className="text-gray-600">
-        I agree to the Terms and Conditions
-      </label>
-    </div>
-    <div className="flex justify-between mt-6">
-      <button
-        className={`px-4 py-2 rounded-md ${
-          activeStep === 1
-            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-            : "bg-blue-500 text-white"
-        }`}
-        onClick={handlePrev}
-        disabled={activeStep === 1}
-      >
-        Previous
-      </button>
-      <button
-        className={`px-4 py-2 rounded-md ${
-          termsAccepted
-            ? "bg-blue-500 text-white"
-            : "bg-gray-300 text-gray-500 cursor-not-allowed"
-        }`}
-        onClick={handleSubmit}
-        disabled={!termsAccepted}
-      >
-        Submit
-      </button>
-    </div>
-  </div>
-)}
-
 
           </div>
         </div>
