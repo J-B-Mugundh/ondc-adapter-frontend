@@ -118,21 +118,19 @@ export default function Portal_Stepone() {
       
       if (proofOfId && proofOfId.length > 0) {
         proofOfId.forEach((file, index) => {
-          formData.append(`documentType`,"GST certificate");
+          formData.append(`documentType`,file.name);
           formData.append(`documents`, file);
         });
       }
+      formData.append(`status`,"Under Verification");
       
-      // Example endpoint for submission
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/ondc/${platform.toLowerCase()}/create`, formData);
   
-      if (response.ok) {
+      if (response.status === 200 && response.data && response.data.success) {
         alert("Form submitted successfully!");
-        // Optionally reset the form or navigate to a success page
-      } else {
-        const errorData = await response.json();
-        alert(`Failed to submit the form: ${errorData.message}`);
-      }
+        
+      } 
+    
     }
     catch (error) {
       console.error("Error submitting the form:", error);
