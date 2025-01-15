@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from 'axios';
 
 export default function Portal_Stepone() {
   const [activeStep, setActiveStep] = useState(1);
@@ -9,15 +10,19 @@ export default function Portal_Stepone() {
   const [consumerKey, setConsumerKey] = useState("");
   const [consumerSecret, setConsumerSecret] = useState("");
   const [authToken, setAuthToken] = useState("");
-  const [proofOfId, setProofOfId] = useState(null);
-  const [proofOfAddress, setProofOfAddress] = useState(null);
+  const [proofOfId, setProofOfId] = useState([]);
+  // const [proofOfAddress, setProofOfAddress] = useState(null);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState("");
+  const [businessName, setBusinessName] = useState("");
+  const [businessRegistrationNumber, setBusinessRegistrationNumber] = useState("");
+  const [gstin, setGstin] = useState("");
+
 
   const steps = [
     { id: 1, label: "Choose Platform" },
     { id: 2, label: "Platform Details" },
-    { id: 3, label: "Upload Documents" },
+    { id: 3, label: "Business Verification" },
     { id: 4, label: "Preview & Submit" },
   ];
 
@@ -43,21 +48,22 @@ export default function Portal_Stepone() {
         setError("Please provide the consumer key and consumer secret.");
         return false;
       }
-      if (platform === "Saleor" && !authToken) {
+      if (platform === "Saelor" && !authToken) {
         setError("Please provide the auth token.");
         return false;
       }
     }
     if (activeStep === 3) {
-      if (!proofOfId) {
-        setError("Please upload a proof of ID.");
+      if (!businessName || !businessRegistrationNumber || !gstin) {
+        setError("Please fill all business details.");
         return false;
       }
-      if (!proofOfAddress) {
-        setError("Please upload a proof of address.");
+      if (!proofOfId.length) {
+        setError("Please upload at least one document.");
         return false;
       }
     }
+    
     return true;
   };
 
@@ -76,20 +82,64 @@ export default function Portal_Stepone() {
       setCompletedSteps((prev) => prev.filter((step) => step !== activeStep - 1));
     }
   };
-
-  const handleSubmit = () => {
-    alert("Form submitted successfully!");
-    console.log({
-      platform,
-      shopLink,
-      accessKey,
-      consumerKey,
-      consumerSecret,
-      authToken,
-      proofOfId,
-      proofOfAddress,
-    });
+ 
+  const handleSubmit = async () => {
+    if (!termsAccepted) {
+      alert("Please accept the terms and conditions to proceed.");
+      return;
+    }
+  
+     try {
+      
+      const formData = new FormData();
+      alert("Form submitted successfully!");
+      if (platform === "Saelor") {
+      formData.append("shopLink", shopLink || "");
+      formData.append("authToken", authToken || "");
+      }
+      if (platform === "WooCommerce") {
+        formData.append("shopLink", shopLink || "");
+        formData.append("consumerKey", consumerKey || "");
+        formData.append("consumerSecret", consumerSecret || "");
+      }
+      if (platform === "Shopify") {
+        formData.append("shopLink", shopLink || "");
+        formData.append("accessKey", accessKey || "");
+        
+      }
+      // Wrap business details into an object
+      const businessDetails = JSON.stringify({
+        businessName: businessName,
+        businessRegistrationNumber: businessRegistrationNumber,
+        GSTIN: gstin,
+      });
+      formData.append("businessDetails", businessDetails);
+  
+      
+      if (proofOfId && proofOfId.length > 0) {
+        proofOfId.forEach((file, index) => {
+          formData.append(`documentType`,"GST certificate");
+          formData.append(`documents`, file);
+        });
+      }
+      
+      // Example endpoint for submission
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/ondc/${platform.toLowerCase()}/create`, formData);
+  
+      if (response.ok) {
+        alert("Form submitted successfully!");
+        // Optionally reset the form or navigate to a success page
+      } else {
+        const errorData = await response.json();
+        alert(`Failed to submit the form: ${errorData.message}`);
+      }
+    }
+    catch (error) {
+      console.error("Error submitting the form:", error);
+      alert("An error occurred while submitting the form.");
+    }
   };
+  
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-8">
@@ -163,7 +213,7 @@ export default function Portal_Stepone() {
                   </option>
                   <option value="Shopify">Shopify</option>
                   <option value="WooCommerce">WooCommerce</option>
-                  <option value="Saleor">Saleor</option>
+                  <option value="Saelor">Saleor</option>
                 </select>
               </div>
             )}
@@ -246,7 +296,7 @@ export default function Portal_Stepone() {
                   </>
                 )}
 
-                {platform === "Saleor" && (
+                {platform === "Saelor" && (
                   <div className="mb-4">
                     <label
                       htmlFor="authToken"
@@ -268,78 +318,153 @@ export default function Portal_Stepone() {
             )}
 
             {activeStep === 3 && (
-              <div>
-                <h2 className="text-lg sm:text-xl font-semibold text-center text-gray-700 mb-6">
-                  Upload Documents
-                </h2>
-                <div className="mb-4">
-                  <label
-                    htmlFor="proofOfId"
-                    className="block text-gray-600 font-medium mb-2"
-                  >
-                    Proof of ID (PDF only)
-                  </label>
-                  <input
-                    type="file"
-                    id="proofOfId"
-                    accept=".pdf"
-                    onChange={(e) => setProofOfId(e.target.files[0])}
-                    className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  {proofOfId && (
-                    <p className="mt-2 text-sm text-green-600">
-                      Uploaded: {proofOfId.name}
-                    </p>
-                  )}
-                </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="proofOfAddress"
-                    className="block text-gray-600 font-medium mb-2"
-                  >
-                    Proof of Address (PDF only)
-                  </label>
-                  <input
-                    type="file"
-                    id="proofOfAddress"
-                    accept=".pdf"
-                    onChange={(e) => setProofOfAddress(e.target.files[0])}
-                    className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  {proofOfAddress && (
-                    <p className="mt-2 text-sm text-green-600">
-                      Uploaded: {proofOfAddress.name}
-                    </p>
-                  )}
-                </div>
-              </div>
-            )}
+  <div>
+    <h2 className="text-lg sm:text-xl font-semibold text-center text-gray-700 mb-6">
+      Business Verification
+    </h2>
+    <div className="mb-4">
+      <label
+        htmlFor="businessName"
+        className="block text-gray-600 font-medium mb-2"
+      >
+        Business Name
+      </label>
+      <input
+        id="businessName"
+        type="text"
+        value={businessName}
+        onChange={(e) => setBusinessName(e.target.value)}
+        placeholder="Enter business name"
+        className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+    <div className="mb-4">
+      <label
+        htmlFor="businessRegistrationNumber"
+        className="block text-gray-600 font-medium mb-2"
+      >
+        Business Registration Number
+      </label>
+      <input
+        id="businessRegistrationNumber"
+        type="text"
+        value={businessRegistrationNumber}
+        onChange={(e) => setBusinessRegistrationNumber(e.target.value)}
+        placeholder="Enter business registration number"
+        className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+    <div className="mb-4">
+      <label
+        htmlFor="gstin"
+        className="block text-gray-600 font-medium mb-2"
+      >
+        GSTIN
+      </label>
+      <input
+        id="gstin"
+        type="text"
+        value={gstin}
+        onChange={(e) => setGstin(e.target.value)}
+        placeholder="Enter GSTIN"
+        className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+    <div className="mb-4">
+      <label
+        htmlFor="proofOfId"
+        className="block text-gray-600 font-medium mb-2"
+      >
+        Upload Proof of ID and Address (PDF only, multiple allowed)
+      </label>
+      <input
+        type="file"
+        id="proofOfId"
+        accept=".pdf"
+        multiple
+        onChange={(e) => setProofOfId(Array.from(e.target.files))}
+        className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+      {proofOfId.length > 0 && (
+        <ul className="mt-2 text-sm text-green-600">
+          {proofOfId.map((file, index) => (
+            <li key={index}>{file.name}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </div>
+)}
 
-            {activeStep === 4 && (
-              <div>
-                <h2 className="text-lg sm:text-xl font-semibold text-center text-gray-700 mb-6">
-                  Preview & Submit
-                </h2>
-                <div className="space-y-2">
-                  <p>
-                    <strong>Platform:</strong> <span className="break-words">{platform}</span>
-                  </p>
-                  <p>
-                    <strong>Shop Link:</strong> <span className="break-words">{shopLink}</span>
-                  </p>
-                 
 
-      {platform === "Shopify" && <p><strong>Access Key:</strong> <span className="break-words">{accessKey}</span></p>}
+           
+{activeStep === 4 && (
+  <div>
+    <h2 className="text-lg sm:text-xl font-semibold text-center text-gray-700 mb-6">
+      Preview & Submit
+    </h2>
+    <div className="space-y-2">
+      <p>
+        <strong>Platform:</strong> <span className="break-words">{platform}</span>
+      </p>
+      <p>
+        <strong>Shop Link:</strong> <span className="break-words">{shopLink}</span>
+      </p>
+
+      {platform === "Shopify" && (
+        <p>
+          <strong>Access Key:</strong>{" "}
+          <span className="break-words">{accessKey}</span>
+        </p>
+      )}
       {platform === "WooCommerce" && (
         <>
-          <p><strong>Consumer Key:</strong> <span className="break-words">{consumerKey}</span></p>
-          <p><strong>Consumer Secret:</strong> <span className="break-words">{consumerSecret}</span></p>
+          <p>
+            <strong>Consumer Key:</strong>{" "}
+            <span className="break-words">{consumerKey}</span>
+          </p>
+          <p>
+            <strong>Consumer Secret:</strong>{" "}
+            <span className="break-words">{consumerSecret}</span>
+          </p>
         </>
       )}
-      {platform === "Saleor" && <p><strong>Auth Token:</strong> <span className="break-words">{authToken}</span></p>}
-      <p><strong>Proof of ID:</strong> <span className="break-words">{proofOfId ? proofOfId.name : "Not uploaded"}</span></p>
-      <p><strong>Proof of Address:</strong> <span className="break-words">{proofOfAddress ? proofOfAddress.name : "Not uploaded"}</span></p>
+      {platform === "Saelor" && (
+        <p>
+          <strong>Auth Token:</strong>{" "}
+          <span className="break-words">{authToken}</span>
+        </p>
+      )}
+      <p>
+        <strong>Business Name:</strong>{" "}
+        <span className="break-words">{businessName}</span>
+      </p>
+      <p>
+        <strong>Business Registration Number:</strong>{" "}
+        <span className="break-words">{businessRegistrationNumber}</span>
+      </p>
+      <p>
+        <strong>GSTIN:</strong>{" "}
+        <span className="break-words">{gstin}</span>
+      </p>
+      <div>
+        <strong>Proof of ID:</strong>
+        {proofOfId && proofOfId.length > 0 ? (
+          <ul className="list-disc list-inside">
+            {proofOfId.map((file, index) => (
+              <li key={index}>
+                {file.name} ({(file.size / 1024).toFixed(2)} KB)
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <span className="break-words">Not uploaded</span>
+        )}
+      </div>
+
+      
     </div>
+
     <div className="mt-4">
       <input
         type="checkbox"
@@ -354,14 +479,22 @@ export default function Portal_Stepone() {
     </div>
     <div className="flex justify-between mt-6">
       <button
-        className={`px-4 py-2 rounded-md ${activeStep === 1 ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "bg-blue-500 text-white"}`}
+        className={`px-4 py-2 rounded-md ${
+          activeStep === 1
+            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+            : "bg-blue-500 text-white"
+        }`}
         onClick={handlePrev}
         disabled={activeStep === 1}
       >
         Previous
       </button>
       <button
-        className={`px-4 py-2 rounded-md ${termsAccepted ? "bg-blue-500 text-white" : "bg-gray-300 text-gray-500 cursor-not-allowed"}`}
+        className={`px-4 py-2 rounded-md ${
+          termsAccepted
+            ? "bg-blue-500 text-white"
+            : "bg-gray-300 text-gray-500 cursor-not-allowed"
+        }`}
         onClick={handleSubmit}
         disabled={!termsAccepted}
       >
@@ -370,6 +503,7 @@ export default function Portal_Stepone() {
     </div>
   </div>
 )}
+
 
           </div>
         </div>
@@ -399,8 +533,8 @@ export default function Portal_Stepone() {
                       (platform === "Shopify" && !accessKey) ||
                       (platform === "WooCommerce" &&
                         (!consumerKey || !consumerSecret)) ||
-                      (platform === "Saleor" && !authToken))) ||
-                  (activeStep === 3 && (!proofOfId || !proofOfAddress))
+                      (platform === "Saelor" && !authToken))) ||
+                  (activeStep === 3 && (!proofOfId ))
                 }
                 className="px-6 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
               >
