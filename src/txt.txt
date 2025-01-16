@@ -1,0 +1,26 @@
+          {/* <div className="relative">
+            <button
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              onClick={toggleDropdown}
+            >
+              Actions
+            </button>
+            {isDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white shadow rounded">
+                <ul>
+                  <li className="px-4 py-2 hover:bg-gray-100">
+                    <a href="#reward">Reward</a>
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-100">
+                    <a href="#promote">Promote</a>
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-100">
+                    <a href="#activate">Activate</a>
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-100 text-red-600">
+                    <a href="#delete">Delete</a>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div> */}
