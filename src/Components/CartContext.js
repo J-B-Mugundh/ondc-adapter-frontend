@@ -16,29 +16,34 @@ export const CartProvider = ({ children }) => {
   const addToCart = (product) => {
     const productId = getProductId(product);
     console.log("Adding product with id:", productId);
-
-    const existingCartItem = cart.find((item) => getProductId(item) === productId);
-    console.log("Existing cart item with id:", existingCartItem ? getProductId(existingCartItem) : null);
-
+  
+    const existingCartItem = cart.find(
+      (item) => getProductId(item) === productId && item.sellerName === product.sellerName
+    );
+    console.log(
+      "Existing cart item with id and same seller:",
+      existingCartItem ? getProductId(existingCartItem) : null
+    );
+  
     if (existingCartItem) {
-      console.log("Found existing product with id:", getProductId(existingCartItem));
-      // Update the cart with new amount (quantity) if the product exists
+      console.log("Found existing product with id and same seller:", getProductId(existingCartItem));
+      // Update the cart with new amount (quantity) if the product exists and seller is the same
       setCart((prevCart) =>
         prevCart.map((item) =>
-          getProductId(item) === productId
+          getProductId(item) === productId && item.sellerName === product.sellerName
             ? { ...item, amount: item.amount + 1 } // Increase the amount by 1
             : item
         )
       );
     } else {
-      // Add the product to the cart if it doesn't exist
+      // Add the product to the cart if it doesn't exist or if the seller is different
       setCart((prevCart) => [
         ...prevCart,
         { ...product, amount: 1 },
       ]);
     }
   };
-
+  
   // Remove item from cart by id
   const removeFromCart = (product) => {
     const productId = getProductId(product);
