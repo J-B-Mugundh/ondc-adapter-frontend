@@ -6,6 +6,7 @@ import AdminDashboard from './Components/AdminDashboard.js';
 import SellerDashboard from './Components/SellerDashboard.js';
 import EditSeller from './Components/EditSeller.js';
 import Home from './pages/Home.js'
+import Cart from './Components/Cart.js';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/sellers" element={<SellerDashboard/>}/>
         <Route path="/sellers/edit/:type/:id" element={<EditSeller />} />
         <Route path="/ondc/search" element={<Home />} />
+        <Route path="/cart" element={<Cart/>}/>
       </Routes>
       </BrowserRouter>
     </>
