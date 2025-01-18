@@ -98,7 +98,7 @@ export default function Portal_Stepone() {
      try {
       
       const formData = new FormData();
-      alert("Form submitted successfully!");
+      
       if (platform === "Saelor") {
       formData.append("shopLink", shopLink || "");
       formData.append("authToken", authToken || "");
@@ -129,6 +129,8 @@ export default function Portal_Stepone() {
         });
       }
       formData.append(`status`,"Under Verification");
+      
+      console.log("API URL:", process.env.REACT_APP_API_URL);
       
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/ondc/${platform.toLowerCase()}/create`, formData);
   

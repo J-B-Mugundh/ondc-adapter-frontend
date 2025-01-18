@@ -5,6 +5,7 @@ import Portal_Stepone from './Components/Portal_Stepone';
 import AdminDashboard from './Components/AdminDashboard.js';
 import SellerDashboard from './Components/SellerDashboard.js';
 import EditSeller from './Components/EditSeller.js';
+import Home from './pages/Home.js'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/admin" element={<AdminDashboard/>}/>
         <Route path="/sellers" element={<SellerDashboard/>}/>
         <Route path="/sellers/edit/:type/:id" element={<EditSeller />} />
+        <Route path="/ondc/search" element={<Home />} />
       </Routes>
       </BrowserRouter>
     </>
