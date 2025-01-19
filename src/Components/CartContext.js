@@ -6,12 +6,26 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
 
   // Helper function to extract the product id
-  const getProductId = (product) => {
-    // Assuming the first block contains the id
-    const blocks = JSON.parse(product.description).blocks;
-    return blocks && blocks[0] && blocks[0].id ? blocks[0].id : null;
+ // Helper function to extract the product ID
+// Helper function to extract the product ID
+const getProductId = (product) => {
+    // Check if the sellerPlatform is "Saleor"
+    if (product.sellerPlatform === "Saleor") {
+      // Use the first variant ID if available
+      return product.variants && product.variants[0] && product.variants[0].id
+        ? product.variants[0].id
+        : null;
+    }
+  
+    // Fallback: Parse description field for the ID
+    try {
+      const blocks = JSON.parse(product.description)?.blocks;
+      return blocks && blocks[0] && blocks[0].id ? blocks[0].id : null;
+    } catch (error) {
+      console.error("Error parsing product description:", error);
+      return null;
+    }
   };
-
   // Add to cart function
   const addToCart = (product) => {
     const productId = getProductId(product);

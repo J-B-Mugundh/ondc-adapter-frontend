@@ -1,11 +1,24 @@
 import React from "react";
 import { useCart } from "./CartContext";
 
-// Helper function to extract the id from the description field
+// Helper function to extract the product ID
 const getProductId = (product) => {
-  // Assuming the first block contains the id
-  const blocks = JSON.parse(product.description).blocks;
-  return blocks && blocks[0] && blocks[0].id ? blocks[0].id : null;
+  // Check if the sellerPlatform is "Saleor"
+  if (product.sellerPlatform === "Saleor") {
+    // Use the first variant ID if available
+    return product.variants && product.variants[0] && product.variants[0].id
+      ? product.variants[0].id
+      : null;
+  }
+
+  // Fallback: Parse description field for the ID
+  try {
+    const blocks = JSON.parse(product.description)?.blocks;
+    return blocks && blocks[0] && blocks[0].id ? blocks[0].id : null;
+  } catch (error) {
+    console.error("Error parsing product description:", error);
+    return null;
+  }
 };
 
 const ProductList = ({ products }) => {
