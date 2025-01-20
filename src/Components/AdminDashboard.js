@@ -5,12 +5,12 @@ import { AiOutlineBarChart, AiOutlinePieChart } from "react-icons/ai";
 
 const Dashboard = () => {
   const stats = [
-    { label: "Earnings", value: "$340.5", icon: <FaDollarSign /> },
-    { label: "Spend this month", value: "$642.39", icon: <FaBalanceScale /> },
-    { label: "Sales", value: "$574.34", icon: <AiOutlineBarChart /> },
-    { label: "Your Balance", value: "$1,000", icon: <FaBalanceScale /> },
+    { label: "Earnings", value: "₹28,290.15", icon: <FaDollarSign /> },
+    { label: "Spend this month", value: "₹53,399.37", icon: <FaBalanceScale /> },
+    { label: "Sales", value: "₹47,758.22", icon: <AiOutlineBarChart /> },
+    { label: "Your Balance", value: "₹83,000", icon: <FaBalanceScale /> },
     { label: "New Tasks", value: "145", icon: <FaTasks /> },
-    { label: "Total Projects", value: "$2433", icon: <FaProjectDiagram /> },
+    { label: "Total Projects", value: "₹202,539.39", icon: <FaProjectDiagram /> },
   ];
 
   // Line Chart Configuration
@@ -40,37 +40,36 @@ const Dashboard = () => {
   ];
 
   // Bar Chart (Weekly Revenue with Spent) Configuration
-const weeklyRevenueChartOptions = {
-  chart: {
-    type: "bar",
-    height: 350,
-  },
-  plotOptions: {
-    bar: {
-      horizontal: false,
-      columnWidth: "55%",
+  const weeklyRevenueChartOptions = {
+    chart: {
+      type: "bar",
+      height: 350,
     },
-  },
-  dataLabels: {
-    enabled: false,
-  },
-  xaxis: {
-    categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-  },
-  colors: ["#1FB6FF", "#FF7F50"], // Colors for Revenue and Spent
-};
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: "55%",
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    xaxis: {
+      categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    },
+    colors: ["#1FB6FF", "#FF7F50"], // Colors for Revenue and Spent
+  };
 
-const weeklyRevenueChartSeries = [
-  {
-    name: "Revenue",
-    data: [120, 150, 180, 200, 170, 220, 190],
-  },
-  {
-    name: "Spent",
-    data: [100, 120, 150, 180, 140, 200, 160],
-  },
-];
-
+  const weeklyRevenueChartSeries = [
+    {
+      name: "Revenue",
+      data: [120, 150, 180, 200, 170, 220, 190],
+    },
+    {
+      name: "Spent",
+      data: [100, 120, 150, 180, 140, 200, 160],
+    },
+  ];
 
   // Bar Chart (Daily Visitors) Configuration
   const dailyVisitorsChartOptions = {
@@ -155,7 +154,6 @@ const weeklyRevenueChartSeries = [
             height={300}
           />
         </div>
-
       </div>
 
       <div className="grid grid-cols-2 gap-6 mt-6">
