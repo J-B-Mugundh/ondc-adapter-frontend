@@ -17,6 +17,16 @@ const getProductId = (product) => {
         ? product.variants[0].id
         : null;
     }
+
+    if(product.sellerPlatform === "shopify"){
+      return product.id;
+    }
+
+    if(product.sellerPlatform === "woocommerce"){
+      return product.id;
+    }
+
+
   
     // Fallback: Parse description field for the ID
     try {
