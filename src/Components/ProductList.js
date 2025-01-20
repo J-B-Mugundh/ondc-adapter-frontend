@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useCart } from "./CartContext";
 
 // Helper function to extract the product ID
 const getProductId = (product) => {
+  if(product.sellerPlatform === "shopify") {
+    return product.id;
+  }
+  
   // Check if the sellerPlatform is "Saleor"
   if (product.sellerPlatform === "Saleor") {
     // Use the first variant ID if available
@@ -22,7 +26,9 @@ const getProductId = (product) => {
 };
 
 const ProductList = ({ products }) => {
+
   const { addToCart } = useCart();
+
 
   if (!Array.isArray(products) || products.length === 0) {
     return <p>No products found.</p>;
@@ -32,7 +38,7 @@ const ProductList = ({ products }) => {
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {products.map((product) => {
         // Extract the id from the product's description field
-        const productId = getProductId(product);
+        const productId = product.sellerPlatform === "shopify" ? product.id : getProductId(product);
 
         return (
           <div

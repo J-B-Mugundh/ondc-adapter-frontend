@@ -48,7 +48,6 @@ const Home = () => {
 
       const data = await response.json();
       console.log("API Response:", data);
-
       if (response.ok) {
         setProducts(data.products || []);
       } else {

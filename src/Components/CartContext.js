@@ -9,6 +9,9 @@ export const CartProvider = ({ children }) => {
  // Helper function to extract the product ID
 // Helper function to extract the product ID
 const getProductId = (product) => {
+  if(product.sellerPlatform === "shopify") {
+    return product.id;
+  }
     // Check if the sellerPlatform is "Saleor"
     if (product.sellerPlatform === "Saleor") {
       // Use the first variant ID if available
@@ -28,7 +31,7 @@ const getProductId = (product) => {
   };
   // Add to cart function
   const addToCart = (product) => {
-    const productId = getProductId(product);
+    const productId = product.sellerPlatform === "shopify" ? product.id : getProductId(product);
     console.log("Adding product with id:", productId);
   
     const existingCartItem = cart.find(

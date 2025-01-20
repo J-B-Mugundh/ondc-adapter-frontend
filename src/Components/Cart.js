@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { IoMdAdd, IoMdClose, IoMdRemove } from "react-icons/io";
 import { useCart } from "./CartContext";
+import axios from "axios";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 // Helper function to extract the id from the description field
 // Helper function to extract the product ID
@@ -36,12 +40,28 @@ const Cart = () => {
     ).toFixed(2);
   };
 
+  useEffect(() => {
+    console.log(cart);
+  },[cart]);
+
   const handleCheckout = async () => {
     // Prepare the products data to send to the API
     const productsToSend = cart.map((item) => {
-      // Extract the first variant ID from the variants array
+
+      switch (item.sellerPlatform) {
+        case "shopify":
+          return {
+            platform: "shopify",
+            product_id: item.id,
+            quantity: item.amount,
+           shopdomainLink: item.shopLink, 
+            shopifyAccessToken: item.accessKey
+          }
+
+      case "Saleor":
+      {// Extract the first variant ID from the variants array
       const variantId = item.variants && item.variants.length > 0 ? item.variants[0].id : null;
-  
+      
       // Extract necessary data
       const saleorUrl = item.shopUrl;
       const authToken = item.authToken;
@@ -58,11 +78,27 @@ const Cart = () => {
   
       // Call backend API for each product
       return {
+        platform: "saleor",
         variantId,      // The variant ID of the product
         quantity,       // The quantity of the product
         saleorUrl,      // The shop URL
         authToken,      // The authorization token
-      };
+      };}
+
+      /*case "woocommerce":{
+
+        // product_id, shopLink, consumerKey, consumerSecret, quantity: wooQuantity
+        return{
+          product_id : item.id,
+           shopLink: item.shopLink ,
+            consumerKey : item.consumerKey,
+             consumerSecret : item.consumerSecret,
+              quantity: item.amount,
+              platform: "woocommerce",
+        }
+
+      }*/
+    }
     }).filter(product => product !== null);  // Filter out null values in case of missing data
   
     // Log the final product data to be sent
@@ -76,38 +112,16 @@ const Cart = () => {
   
     try {
       // Send each product's data as individual requests
-      const responses = await Promise.all(productsToSend.map(async (product) => {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/ondc/cart`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            variantId: product.variantId,
-            quantity: product.quantity,
-            saleorUrl: product.saleorUrl,
-            authToken: product.authToken,
-          }),
-        });
-  
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error("Error Response (text):", errorText);
-          return { success: false, message: errorText };
-        }
-  
-        const data = await response.json();
-        return { success: true, data };
-      }));
-  
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/ondc/cart`, {platforms:productsToSend});
       // Process responses
-      responses.forEach((response) => {
-        if (response.success) {
-          alert("Product placed successfully! \n" + JSON.stringify(response.data, null, 2));
-        } else {
-          alert("Failed to place the product order. Error: " + response.message);
-        }
-      });
+      console.log("API Response:", response);
+      
+      if (response.status === 200) {
+        toast.success("Product placed successfully!");
+      } else {
+        toast.error(`Failed to place the product order. Error: ${response.message}`);
+      }
+      
   
     } catch (error) {
       console.error("Error during checkout:", error);
@@ -219,8 +233,10 @@ const Cart = () => {
               Checkout
             </button>
           </div>
+          
         </div>
       )}
+      <ToastContainer />
     </div>
   );
 };
