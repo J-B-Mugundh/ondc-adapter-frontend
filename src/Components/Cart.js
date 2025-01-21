@@ -24,9 +24,9 @@ const getProductId = (product) => {
       return product.id;
     }
 
-    // if(product.sellerPlatform === "woocommerce"){
-    //   return product.id;
-    // }
+    if(product.sellerPlatform === "woocommerce"){
+      return product.id;
+    }
 
 
   
@@ -101,7 +101,7 @@ const calculateTotal = () => {
         authToken,      // The authorization token
       };}
 
-      /*case "woocommerce":{
+      case "woocommerce":{
 
         // product_id, shopLink, consumerKey, consumerSecret, quantity: wooQuantity
         return{
@@ -113,7 +113,7 @@ const calculateTotal = () => {
               platform: "woocommerce",
         }
 
-      }*/
+      }
     }
     }).filter(product => product !== null);  // Filter out null values in case of missing data
   
@@ -222,12 +222,7 @@ const calculateTotal = () => {
                         <IoMdAdd />
                       </button>
                     </div>
-                    {/* Total Price */}
-                    {/* <div className="text-primary font-medium">
-                      {(item.price?.amount * (item.amount || 1)).toFixed(2)}{" "}
-                      {item.price?.currency || "$"}
-                    </div> */}
-                    {/* Total Price in INR */}
+                    
 <div className="text-primary font-medium">
   ₹{((item.price?.amount || 0) * (item.amount || 1) * EXCHANGE_RATE_TO_INR).toFixed(2)}
 </div>
@@ -238,13 +233,7 @@ const calculateTotal = () => {
             );
           })}
 
-          {/* Cart Total */}
-          {/* <div className="mt-6 text-right font-bold text-lg">
-            Total:{" "}
-            {calculateTotal()}{" "}
-            {cart[0]?.price?.currency || "$"}
-          </div> */}
-          {/* Cart Total in INR */}
+          
 <div className="mt-6 text-right font-bold text-lg">
   Total: ₹{calculateTotal()}
 </div>

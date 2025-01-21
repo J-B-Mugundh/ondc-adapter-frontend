@@ -24,9 +24,9 @@ const getProductId = (product) => {
       return product.id;
     }
 
-    // if(product.sellerPlatform === "woocommerce"){
-    //   return product.id;
-    // }
+    if(product.sellerPlatform === "woocommerce"){
+      return product.id;
+    }
 
   
     // Fallback: Parse description field for the ID
