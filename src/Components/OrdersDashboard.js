@@ -57,7 +57,11 @@ const OrdersDashboard = () => {
                     </td>
                     <td className="px-6 py-4 text-sm">{order.customer}</td>
                     <td className="px-6 py-4 text-sm">{order.platform}</td>
-                    <td className="px-6 py-4 text-sm">{order.total_price}</td>
+                    <td className="px-6 py-4 text-sm">
+  {/* Extract number if it's a string */}
+  {order.total_price ? `₹${(parseFloat(order.total_price.replace(/[^\d.-]/g, '')) * 82.75).toFixed(2)}` : "N/A"}
+</td>
+
                     <td className="px-6 py-4 text-sm">
                       {new Date(order.created_at).toLocaleString()}
                     </td>

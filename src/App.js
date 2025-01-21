@@ -8,11 +8,12 @@ import SellerDashboard from './Components/SellerDashboard.js';
 import EditSeller from './Components/EditSeller.js';
 import Home from './pages/Home.js'
 import Cart from './Components/Cart.js';
-
+import Navbar from './Components/Navbar.js'
 function App() {
   return (
     <>
       <BrowserRouter>
+      <Navbar /> 
       <Routes>
         <Route path="/" element={<Portal_Stepone/>} />
         <Route path="/admin" element={<AdminDashboard/>} />

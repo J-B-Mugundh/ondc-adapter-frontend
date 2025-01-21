@@ -3,10 +3,10 @@ import { useCart } from "./CartContext";
 
 // Helper function to extract the product ID
 const getProductId = (product) => {
-  if(product.sellerPlatform === "shopify") {
+  if (product.sellerPlatform === "shopify") {
     return product.id;
   }
-  
+
   // Check if the sellerPlatform is "Saleor"
   if (product.sellerPlatform === "Saleor") {
     // Use the first variant ID if available
@@ -15,30 +15,20 @@ const getProductId = (product) => {
       : null;
   }
 
-  
-  if(product.sellerPlatform === "shopify"){
-    return product.id;
-  }
-
-  if(product.sellerPlatform === "woocommerce"){
-    return product.id;
-  }
-
-
   // Fallback: Parse description field for the ID
   try {
     const blocks = JSON.parse(product.description)?.blocks;
     return blocks && blocks[0] && blocks[0].id ? blocks[0].id : null;
   } catch (error) {
     console.error("Error parsing product description:", error);
-    return null;
-  }
+    return null;
+  }
 };
 
 const ProductList = ({ products }) => {
-
   const { addToCart } = useCart();
 
+  const EXCHANGE_RATE_TO_INR = 82.5; // Static exchange rate to INR
 
   if (!Array.isArray(products) || products.length === 0) {
     return <p>No products found.</p>;
@@ -50,9 +40,14 @@ const ProductList = ({ products }) => {
         // Extract the id from the product's description field
         const productId = product.sellerPlatform === "shopify" ? product.id : getProductId(product);
 
+        // Convert price to INR
+        const priceInINR = product.price?.amount
+          ? (product.price.amount * EXCHANGE_RATE_TO_INR).toFixed(2)
+          : "N/A";
+
         return (
           <div
-            key={productId}  // Use extracted id as the key
+            key={productId} // Use extracted id as the key
             className="border border-[#e4e4e4] rounded-lg p-4 flex flex-col justify-between"
           >
             <div className="h-[200px] mb-4 relative overflow-hidden group">
@@ -71,8 +66,7 @@ const ProductList = ({ products }) => {
               <h2 className="font-semibold mb-1">{product.name}</h2>
               <p className="mb-1">Seller: {product.sellerName || "Unknown"}</p>
               <p className="mb-1">
-                Price: {product.price?.amount || "N/A"}{" "}
-                {product.price?.currency || ""}
+                Price: ₹{priceInINR} {/* Display price in INR */}
               </p>
             </div>
             <button

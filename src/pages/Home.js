@@ -28,7 +28,8 @@ const Home = () => {
   // Mock filter options
   const sortOptions = ["Price Low to High", "Price High to Low", "Top Rated", "Newest Arrivals"];
   const filterOptions = ["Brand", "Color", "Size", "Material", "Rating", "Discount"];
-  const priceRanges = ["Under $50", "$50 - $100", "$100 - $200", "Above $200"];
+  const priceRanges = ["Under ₹1000", "₹1000 - ₹5000", "₹5000 - ₹10000", "Above ₹10000"];
+
 
   
   const handleSearch = async (productName) => {

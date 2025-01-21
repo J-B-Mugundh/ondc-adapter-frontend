@@ -10,6 +10,8 @@ import 'react-toastify/dist/ReactToastify.css';
 // Helper function to extract the id from the description field
 // Helper function to extract the product ID
 const getProductId = (product) => {
+  
+
     // Check if the sellerPlatform is "Saleor"
     if (product.sellerPlatform === "Saleor") {
       // Use the first variant ID if available
@@ -22,9 +24,9 @@ const getProductId = (product) => {
       return product.id;
     }
 
-    if(product.sellerPlatform === "woocommerce"){
-      return product.id;
-    }
+    // if(product.sellerPlatform === "woocommerce"){
+    //   return product.id;
+    // }
 
 
   
@@ -40,15 +42,19 @@ const getProductId = (product) => {
 
 const Cart = () => {
   const { cart, removeFromCart, increaseAmount, decreaseAmount } = useCart();
-
+  const EXCHANGE_RATE_TO_INR = 82.5; // Example exchange rate, update as needed
   // Helper function to calculate the total price
-  const calculateTotal = () => {
-    return cart.reduce(
+  // Helper function to calculate the total price in INR
+const calculateTotal = () => {
+  return cart
+    .reduce(
       (acc, item) =>
         acc + (item.price?.amount || 0) * (item.amount || 1),
       0
-    ).toFixed(2);
-  };
+    )
+    .toFixed(2) * EXCHANGE_RATE_TO_INR;
+};
+
 
   useEffect(() => {
     console.log(cart);
@@ -217,10 +223,15 @@ const Cart = () => {
                       </button>
                     </div>
                     {/* Total Price */}
-                    <div className="text-primary font-medium">
+                    {/* <div className="text-primary font-medium">
                       {(item.price?.amount * (item.amount || 1)).toFixed(2)}{" "}
                       {item.price?.currency || "$"}
-                    </div>
+                    </div> */}
+                    {/* Total Price in INR */}
+<div className="text-primary font-medium">
+  ₹{((item.price?.amount || 0) * (item.amount || 1) * EXCHANGE_RATE_TO_INR).toFixed(2)}
+</div>
+
                   </div>
                 </div>
               </div>
@@ -228,11 +239,16 @@ const Cart = () => {
           })}
 
           {/* Cart Total */}
-          <div className="mt-6 text-right font-bold text-lg">
+          {/* <div className="mt-6 text-right font-bold text-lg">
             Total:{" "}
             {calculateTotal()}{" "}
             {cart[0]?.price?.currency || "$"}
-          </div>
+          </div> */}
+          {/* Cart Total in INR */}
+<div className="mt-6 text-right font-bold text-lg">
+  Total: ₹{calculateTotal()}
+</div>
+
 
           {/* Checkout Button */}
           <div className="mt-6 text-center">
