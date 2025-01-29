@@ -38,7 +38,15 @@ const ProductList = ({ products }) => {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"  style={{ 
+      
+      justifyContent: "center", 
+      margin: "20px 0",
+      backgroundColor: "rgba(255, 255, 255, 0.8)",
+      padding: "15px",
+      borderRadius: "10px",
+      boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
+    }}>
       {products.map((product) => {
         // Extract the id from the product's description field
         const productId = product.sellerPlatform === "shopify" ? product.id : getProductId(product);
@@ -51,7 +59,16 @@ const ProductList = ({ products }) => {
         return (
           <div
             key={productId} // Use extracted id as the key
-            className="border border-[#e4e4e4] rounded-lg p-4 flex flex-col justify-between"
+            className="border border-[black] rounded-lg p-4 flex flex-col justify-between"
+        //     style={{ 
+        //   display: "flex", 
+        //   justifyContent: "center", 
+        //   margin: "20px 0",
+        //   backgroundColor: "rgba(255, 255, 255, 0.6)",
+        //   padding: "15px",
+        //   borderRadius: "10px",
+        //   boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
+        // }}
           >
             <div className="h-[200px] mb-4 relative overflow-hidden group">
               <div className="w-full h-full flex justify-center items-center">
@@ -63,7 +80,7 @@ const ProductList = ({ products }) => {
               </div>
             </div>
             <div className="mb-4">
-              <div className="text-sm capitalize text-gray-500 mb-1">
+              <div className="text-sm capitalize black mb-1">
                 {product.sellerPlatform || "Unknown Platform"}
               </div>
               <h2 className="font-semibold mb-1">{product.name}</h2>

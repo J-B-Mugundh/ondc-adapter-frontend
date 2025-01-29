@@ -1,25 +1,27 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import SecondaryHeader from "./SecondaryHeader";
 
 const Navbar = () => {
   return (
-    <nav className="bg-gradient-to-r from-[#4B0082] via-[#6A0DAD] to-[#8A2BE2] text-white py-4 px-6 shadow-xl">
+    <nav className="bg-gradient-to-r from-[#4B0082] via-[#6A0DAD] to-[#8A2BE2] text-white py-2 px-4 shadow-xl">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo Section */}
-        <div className="text-3xl font-extrabold tracking-wider">
+        <div className="text-2xl font-extrabold tracking-wider">
           <Link to="/" className="hover:text-[#FFD700] transition duration-300">
             Adapter Avengers
           </Link>
         </div>
 
         {/* Links Section */}
-        <ul className="flex space-x-8 text-lg font-semibold">
+        <ul className="flex space-x-6 text-base font-semibold mt-2">
+
           <li>
             <Link
               to="/"
               className="hover:text-[#FFD700] transition duration-300"
             >
-             Seller Onboarding 
+              Seller Onboarding
             </Link>
           </li>
           <li>
@@ -55,17 +57,11 @@ const Navbar = () => {
             </Link>
           </li>
           
-         
-          {/* <li>
-            <Link
-              to="/cart"
-              className="hover:text-[#FFD700] transition duration-300"
-            >
-              Cart
-            </Link>
-          </li> */}
-         
+          
         </ul>
+        <div className="flex items-center">
+            <SecondaryHeader />
+          </div>
       </div>
     </nav>
   );

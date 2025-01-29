@@ -101,11 +101,12 @@ const Dashboard = () => {
     chart: {
       type: "donut",
     },
-    labels: ["Your Files", "System", "Others"],
-    colors: ["#6C63FF", "#1FB6FF", "#BDBDBD"],
+    labels: ["Grocery", "Fashion", "Home Appliances", "Beauty & Health"],
+colors: ["#6C63FF", "#1FB6FF", "#FF7043", "#4CAF50"]
+
   };
 
-  const pieChartSeries = [63, 25, 12];
+  const pieChartSeries = [40,30,20,10];
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -174,7 +175,7 @@ const Dashboard = () => {
         {/* Pie Chart */}
         <div className="bg-white shadow-md rounded-lg p-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold">Your Pie Chart</h2>
+            <h2 className="text-lg font-semibold">Sales Ratio by Product Category</h2>
             <AiOutlinePieChart className="text-blue-500 text-2xl" />
           </div>
           <Chart
@@ -184,18 +185,22 @@ const Dashboard = () => {
             height={300}
           />
           <div className="text-center mt-4">
-            <div className="flex justify-between">
-              <span className="text-blue-500">Your Files</span>
-              <span>63%</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-blue-300">System</span>
-              <span>25%</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-500">Others</span>
-              <span>12%</span>
-            </div>
+          <div className="flex justify-between">
+      <span className="text-[#6C63FF]">Grocery</span>
+      <span>40%</span>
+    </div>
+    <div className="flex justify-between">
+      <span className="text-[#1FB6FF]">Fashion</span>
+      <span>30%</span>
+    </div>
+    <div className="flex justify-between">
+      <span className="text-[#FF7043]">Home Appliances</span>
+      <span>20%</span>
+    </div>
+    <div className="flex justify-between">
+      <span className="text-[#4CAF50]">Beauty & Health</span>
+      <span>10%</span>
+    </div>
           </div>
         </div>
       </div>
